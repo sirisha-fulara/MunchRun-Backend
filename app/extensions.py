@@ -6,8 +6,7 @@ from flask_cors import CORS
 db= SQLAlchemy()
 jwt= JWTManager()
 socketio= SocketIO(
-    cors_allowed_origins='*',
-    logger=True,
-    engineio_logger=True
+    cors_allowed_origins="*",
+    async_mode="gevent"    
 )
 cors= CORS()
