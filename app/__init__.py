@@ -6,10 +6,21 @@ def create_app():
     app= Flask(__name__)
     app.config.from_object(Config)
     
+    allowed_origins = [
+        "http://localhost:5173",
+        "https://munch-run-frontend.vercel.app",
+    ]
+    
     db.init_app(app)
     jwt.init_app(app)
     socketio.init_app(app, cors_allowed_origins="*")
-    cors.init_app(app, resources={r"/api/*": {"origins": "*"}})
+    cors.init_app(app, resources={
+        r"/api/*": {
+            "origins": allowed_origins,
+            "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+            "allow_headers": ["Content-Type", "Authorization"]
+        }
+    })
     
     from app.routes.auth import auth_bp
     from app.routes.admin import admin_bp
