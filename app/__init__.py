@@ -15,11 +15,15 @@ def create_app():
     jwt.init_app(app)
     socketio.init_app(app, cors_allowed_origins="*")
     cors.init_app(app, resources={
-        r"/api/*": {
-            "origins": allowed_origins,
-            "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-            "allow_headers": ["Content-Type", "Authorization"]
-        }
+    r"/api/*": {
+        "origins": [
+            "http://localhost:5173",
+            "https://munch-run-frontend.vercel.app"
+        ],
+        "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"],
+        "supports_credentials": True
+    }
     })
     
     from app.routes.auth import auth_bp
