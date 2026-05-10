@@ -165,6 +165,19 @@ def delete_menu_item(item_id):
     if not item:
         return jsonify({"error": "Item not found"}), 404
 
+    # check if any order items reference this menu item
+    from app.models.order import OrderItem
+    linked = OrderItem.query.filter_by(menu_item_id=item_id).count()
+
+    if linked > 0:
+        # just mark as unavailable instead of deleting
+        item.is_available = False
+        db.session.commit()
+        return jsonify({
+            "message": f"{item.name} has orders linked — marked as unavailable instead",
+            "item": item.to_dict()
+        }), 200
+
     db.session.delete(item)
     db.session.commit()
 
